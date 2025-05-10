@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'dart:math';  
 import 'package:reusmart_mobile/View/AboutUs.dart';
+import 'package:reusmart_mobile/View/Login.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,6 +24,10 @@ class _HomePageState extends State<HomePage> {
   static const apiUrl  = 'http://10.0.2.2:8000/api';
   static const hostUrl = 'http://10.0.2.2:8000';
 
+  final List<Widget> _pages = [
+    HomePage(),    
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +40,6 @@ class _HomePageState extends State<HomePage> {
 
     final randomList = List.of(_products)..shuffle();
     final dashList = randomList.take(6).toList();
-    // Bangun URL banner dari 3 produk pertama dashboard
     final banners = dashList.take(3).map((p) {
       final fn = p.fotoBarang.isNotEmpty
         ? p.fotoBarang.first.namaFile
@@ -96,10 +100,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         // title: Text('ReUseMart'),
-        centerTitle: true,                       // supaya logo di tengah
+        centerTitle: true,                     
         title: Image.asset(
           'assets/images/logo2.png',
-          height: 40,                            // sesuaikan ukuran
+          height: 40,                            
         ),
         elevation: 0,
       ),
@@ -292,7 +296,7 @@ class _HomePageState extends State<HomePage> {
             ),
 
             SizedBox(height: 16),
-            
+
             AboutUsSection(),
 
             SizedBox(height: 16),

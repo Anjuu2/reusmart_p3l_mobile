@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reusmart_mobile/client/LoginClient.dart';
+import 'package:reusmart_mobile/View/BottomNav.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -16,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _storage = const FlutterSecureStorage(); // 👈 Tambahkan ini
+  final _storage = const FlutterSecureStorage();
 
   String? _selectedUserType;
   bool _isLoading = false;
@@ -188,7 +189,17 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+        appBar: AppBar(title: const Text('Login'),
+          leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MainNavPage()),
+            );
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
