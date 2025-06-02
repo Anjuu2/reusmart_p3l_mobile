@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 // Import semua halaman dashboard
 import 'package:reusmart_mobile/View/Login.dart';
