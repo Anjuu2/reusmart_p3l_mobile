@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:reusmart_mobile/View/Pembeli_Profile.dart'; // Import halaman profil pembeli
+import 'package:reusmart_mobile/View/Pembeli_profile.dart';
 
 class PembeliDashboard extends StatefulWidget {
+  final String namaPembeli;
+  const PembeliDashboard({Key? key, required this.namaPembeli}) : super(key: key);
+
   @override
   _PembeliDashboardState createState() => _PembeliDashboardState();
 }
 
 class _PembeliDashboardState extends State<PembeliDashboard> {
   int _currentIndex = 0;
-  late String namaPembeli;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    namaPembeli = args != null ? args['nama_pembeli'] ?? 'User' : 'User';
-  }
 
   @override
   Widget build(BuildContext context) {
     final pages = [
       Center(child: Text('Ini halaman dashboard pembeli')),
-      PembeliProfile(namaPembeli: namaPembeli),
+      PembeliProfile(namaPembeli: widget.namaPembeli),
     ];
 
     return Scaffold(
-      appBar: AppBar(title: Text('Selamat datang, $namaPembeli')),
+      appBar: AppBar(title: Text('Selamat datang, ${widget.namaPembeli}')),
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

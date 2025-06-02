@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:reusmart_mobile/View/Kurir_Profile.dart';
+import 'package:reusmart_mobile/View/Kurir_profile.dart';
 
 class KurirDashboard extends StatefulWidget {
+  final String namaKurir;
+  const KurirDashboard({Key? key, required this.namaKurir}) : super(key: key);
+
   @override
   _KurirDashboardState createState() => _KurirDashboardState();
 }
 
 class _KurirDashboardState extends State<KurirDashboard> {
   int _currentIndex = 0;
-  late String namaKurir;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    namaKurir = args != null ? args['nama_pegawai'] ?? 'User' : 'User';
-  }
 
   @override
   Widget build(BuildContext context) {
     final pages = [
       Center(child: Text('Ini halaman dashboard kurir')),
-      KurirProfile(namaKurir: namaKurir),
+      KurirProfile(namaKurir: widget.namaKurir),
     ];
 
     return Scaffold(
-      appBar: AppBar(title: Text('Selamat datang, $namaKurir')),
+      appBar: AppBar(title: Text('Selamat datang, ${widget.namaKurir}')),
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
