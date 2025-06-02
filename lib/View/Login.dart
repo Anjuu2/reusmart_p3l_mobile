@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reusmart_mobile/client/LoginClient.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -21,10 +21,12 @@ class _LoginPageState extends State<LoginPage> {
   final List<String> _userTypes = ['pembeli', 'penitip', 'kurir', 'hunter'];
 
   Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) {
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      print("Form tidak valid atau currentState null");
       return;
     }
     if (_selectedUserType == null) {
+      print("User type belum dipilih (null)");
       setState(() {
         _errorMessage = 'Pilih tipe user terlebih dahulu.';
       });
@@ -46,64 +48,97 @@ class _LoginPageState extends State<LoginPage> {
 
       print('Response login: $response');
 
+      if (response == null) {
+        print("Response dari server null!");
+        setState(() {
+          _errorMessage = 'Tidak ada response dari server.';
+        });
+        return;
+      }
+
       if (response['success'] == true) {
-        if (response['user'] != null && response['user']['email'] != null) {
-          String email = response['user']['email'];
-
-          String extractNameFromEmail(String email) {
-            if (email.contains('@')) {
-              return email.split('@')[0];
-            }
-            return email;
-          }
-
-          String namaUser = extractNameFromEmail(email);
-          String? redirectPage = response['redirect_page'];
-
-          switch (redirectPage) {
-            case 'dashboard.pembeli':
-              Navigator.pushReplacementNamed(
-                context,
-                '/pembeliDashboard',
-                arguments: {'nama_pembeli': namaUser},
-              );
-              break;
-            case 'dashboard.penitip':
-              Navigator.pushReplacementNamed(
-                context,
-                '/penitipDashboard',
-                arguments: {'nama_penitip': namaUser},
-              );
-              break;
-            case 'dashboard.kurir':
-              Navigator.pushReplacementNamed(
-                context,
-                '/kurirDashboard',
-                arguments: {'nama_pegawai': namaUser},
-              );
-              break;
-            case 'dashboard.hunter':
-              Navigator.pushReplacementNamed(
-                context,
-                '/hunterDashboard',
-                arguments: {'nama_pegawai': namaUser},
-              );
-              break;
-            default:
-              Navigator.pushReplacementNamed(context, '/');
-              break;
-          }
-        } else {
+        if (response['user'] == null) {
+          print("Field 'user' pada response null!");
           setState(() {
-            _errorMessage = 'Data user tidak lengkap dari server.';
+            _errorMessage = 'Data user tidak ditemukan pada response server.';
           });
+          return;
+        }
+        if (response['user']['email'] == null) {
+          print("Field 'email' pada user null!");
+          setState(() {
+            _errorMessage = 'Email user tidak tersedia.';
+          });
+          return;
+        }
+
+        String email = response['user']['email'];
+        print("Email user: $email");
+
+        String extractNameFromEmail(String email) {
+          if (email.contains('@')) {
+            return email.split('@')[0];
+          }
+          return email;
+        }
+
+        String namaUser = extractNameFromEmail(email);
+        print("Nama user diekstrak: $namaUser");
+
+        String? redirectPage = response['redirect_page'];
+        print("Redirect page: $redirectPage");
+
+        if (redirectPage == null) {
+          print("redirect_page null!");
+          setState(() {
+            _errorMessage = 'Redirect page tidak tersedia.';
+          });
+          return;
+        }
+
+        switch (redirectPage) {
+          case 'dashboard.pembeli':
+            Navigator.pushReplacementNamed(
+              context,
+              '/pembeliDashboard',
+              arguments: {'nama_pembeli': namaUser},
+            );
+            break;
+          case 'dashboard.penitip':
+            Navigator.pushReplacementNamed(
+              context,
+              '/penitipDashboard',
+              arguments: {'nama_penitip': namaUser},
+            );
+            break;
+          case 'dashboard.kurir':
+            Navigator.pushReplacementNamed(
+              context,
+              '/kurirDashboard',
+              arguments: {'nama_pegawai': namaUser},
+            );
+            break;
+          case 'dashboard.hunter':
+            Navigator.pushReplacementNamed(
+              context,
+              '/hunterDashboard',
+              arguments: {'nama_pegawai': namaUser},
+            );
+            break;
+          default:
+            print("Redirect page tidak dikenali: $redirectPage");
+            Navigator.pushReplacementNamed(context, '/');
+            break;
         }
       } else {
+        print("Login gagal dengan pesan: ${response['message']}");
         setState(() {
           _errorMessage = response['message'] ?? 'Login gagal. Periksa email dan password.';
         });
       }
-    } catch (e) {
+    } catch (e, stack) {
+      print("Exception saat login: $e");
+      print(stack);
       setState(() {
         _errorMessage = 'Terjadi kesalahan: $e';
       });
