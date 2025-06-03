@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:reusmart_mobile/client/LoginClient.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:async';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,6 +23,38 @@ class _LoginPageState extends State<LoginPage> {
   String _errorMessage = '';
 
   final List<String> _userTypes = ['pembeli', 'penitip', 'kurir', 'hunter'];
+
+  Future<String?> getFcmToken() async {
+    return await FirebaseMessaging.instance.getToken();
+  }
+
+  Future<void> saveFcmTokenToServer(String fcmToken, String apiToken, String userType) async {
+    String url = '';
+    if (userType == 'pembeli') {
+      url = 'http://10.0.2.2:8000/api/save-fcm-token-pembeli';
+    } else if (userType == 'penitip') {
+      url = 'http://10.0.2.2:8000/api/save-fcm-token-penitip';
+    } else {
+      // Handle other user types or error
+      print('User type tidak dikenali');
+      return;
+    }
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $apiToken',
+      },
+      body: jsonEncode({'fcm_token': fcmToken}),
+    );
+
+    if (response.statusCode == 200) {
+      print('FCM token saved');
+    } else {
+      print('Failed to save FCM token: ${response.statusCode}');
+    }
+  }
 
   Future<void> _login() async {
     if (!(_formKey.currentState?.validate() ?? false)) {
@@ -57,6 +93,15 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       if (response['success'] == true) {
+        String apiToken = response['token'];
+        String? fcmToken = await getFcmToken();
+        String userType = _selectedUserType!.toLowerCase();
+        print("API Token didapat: $apiToken");
+        print("FCM Token didapat: $fcmToken");
+
+         if (fcmToken != null) {
+          await saveFcmTokenToServer(fcmToken, apiToken, userType);
+        }
         if (response['user'] == null) {
           print("Field 'user' pada response null!");
           setState(() {
