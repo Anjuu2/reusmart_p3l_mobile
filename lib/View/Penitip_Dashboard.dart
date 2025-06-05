@@ -3,7 +3,8 @@ import 'package:reusmart_mobile/View/Penitip_profile.dart';
 
 class PenitipDashboard extends StatelessWidget {
   final String namaPenitip;
-  const PenitipDashboard({Key? key, required this.namaPenitip}) : super(key: key);
+  final String apiToken;
+  const PenitipDashboard({Key? key, required this.namaPenitip, required this.apiToken}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class PenitipDashboard extends StatelessWidget {
           if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => PenitipProfile(namaPenitip: namaPenitip)),
+              MaterialPageRoute(builder: (_) => PenitipProfile(namaPenitip: namaPenitip, apiToken: apiToken)),
             );
           }
         },

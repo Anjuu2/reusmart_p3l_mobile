@@ -104,6 +104,7 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (_) => PenitipDashboard(
                 namaPenitip: args['nama_penitip'] ?? 'User',
+                apiToken: args['api_token'] ?? '',
               ),
             );
           case '/kurirDashboard':
