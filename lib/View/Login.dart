@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,12 +14,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _storage = const FlutterSecureStorage(); // 👈 Tambahkan ini
 
   String? _selectedUserType;
-
   bool _isLoading = false;
   String _errorMessage = '';
 
@@ -34,8 +34,9 @@ class _LoginPageState extends State<LoginPage> {
       url = 'http://10.0.2.2:8000/api/save-fcm-token-pembeli';
     } else if (userType == 'penitip') {
       url = 'http://10.0.2.2:8000/api/save-fcm-token-penitip';
+    } else if (userType == 'kurir') {
+      url = 'http://10.0.2.2:8000/api/save-fcm-token-pegawai';
     } else {
-      // Handle other user types or error
       print('User type tidak dikenali');
       return;
     }
@@ -62,7 +63,6 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     if (_selectedUserType == null) {
-      print("User type belum dipilih (null)");
       setState(() {
         _errorMessage = 'Pilih tipe user terlebih dahulu.';
       });
@@ -85,7 +85,6 @@ class _LoginPageState extends State<LoginPage> {
       print('Response login: $response');
 
       if (response == null) {
-        print("Response dari server null!");
         setState(() {
           _errorMessage = 'Tidak ada response dari server.';
         });
@@ -94,47 +93,32 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response['success'] == true) {
         String apiToken = response['token'];
+
+        // Simpan API Token di secure storage
+        await _storage.write(key: 'api_token', value: apiToken);
+        print("API Token disimpan di secure storage.");
+
         String? fcmToken = await getFcmToken();
         String userType = _selectedUserType!.toLowerCase();
-        print("API Token didapat: $apiToken");
-        print("FCM Token didapat: $fcmToken");
+        print("API Token: $apiToken");
+        print("FCM Token: $fcmToken");
 
-         if (fcmToken != null) {
+        if (fcmToken != null) {
           await saveFcmTokenToServer(fcmToken, apiToken, userType);
         }
-        if (response['user'] == null) {
-          print("Field 'user' pada response null!");
+
+        if (response['user'] == null || response['user']['email'] == null) {
           setState(() {
-            _errorMessage = 'Data user tidak ditemukan pada response server.';
-          });
-          return;
-        }
-        if (response['user']['email'] == null) {
-          print("Field 'email' pada user null!");
-          setState(() {
-            _errorMessage = 'Email user tidak tersedia.';
+            _errorMessage = 'Data user tidak lengkap dari server.';
           });
           return;
         }
 
         String email = response['user']['email'];
-        print("Email user: $email");
-
-        String extractNameFromEmail(String email) {
-          if (email.contains('@')) {
-            return email.split('@')[0];
-          }
-          return email;
-        }
-
-        String namaUser = extractNameFromEmail(email);
-        print("Nama user diekstrak: $namaUser");
+        String namaUser = email.split('@')[0];
 
         String? redirectPage = response['redirect_page'];
-        print("Redirect page: $redirectPage");
-
         if (redirectPage == null) {
-          print("redirect_page null!");
           setState(() {
             _errorMessage = 'Redirect page tidak tersedia.';
           });
@@ -171,12 +155,10 @@ class _LoginPageState extends State<LoginPage> {
             );
             break;
           default:
-            print("Redirect page tidak dikenali: $redirectPage");
             Navigator.pushReplacementNamed(context, '/');
             break;
         }
       } else {
-        print("Login gagal dengan pesan: ${response['message']}");
         setState(() {
           _errorMessage = response['message'] ?? 'Login gagal. Periksa email dan password.';
         });
