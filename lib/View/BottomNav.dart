@@ -17,7 +17,7 @@ class _MainNavPageState extends State<MainNavPage> {
   final _pages = [
     HomePage(),
     MerchandisePage(),
-    ProfilePage(),
+    LoginPage(),
   ];
 
   @override
