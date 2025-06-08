@@ -9,6 +9,8 @@ import 'package:reusmart_mobile/View/Pembeli_Dashboard.dart';
 import 'package:reusmart_mobile/View/Penitip_Dashboard.dart';
 import 'package:reusmart_mobile/View/Kurir_Dashboard.dart';
 import 'package:reusmart_mobile/View/Hunter_Dashboard.dart';
+import 'package:reusmart_mobile/View/Homepage.dart';
+import 'package:reusmart_mobile/View/BottomNav.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -88,8 +90,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ReUseMart',
-      theme: ThemeData(primarySwatch: Colors.green),
-      routes: staticRoutes,
+      theme: ThemeData(
+        primarySwatch: Colors.green,       // <— ini bikin AppBar hijau
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.green,   // pastikan juga di sini
+          foregroundColor: Colors.white,   // untuk teks/icon putih
+        ),
+      ),
+      // home: HomePage(),
+      home: MainNavPage(),
+      debugShowCheckedModeBanner: false,
+      // routes: staticRoutes,
       onGenerateRoute: (settings) {
         final args = settings.arguments as Map<String, dynamic>? ?? {};
 

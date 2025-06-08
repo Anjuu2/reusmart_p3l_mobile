@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 
 class LoginClient {
   // URL untuk emulator Android Studio, ganti sesuai kebutuhan
-  // static const String baseUrl = 'http://10.0.2.2:8000/api';
-  static const String baseUrl = 'http://192.168.54.79:8000/api';
+  static const String baseUrl = 'http://10.0.2.2:8000/api';
+  // static const String baseUrl = 'http://192.168.54.79:8000/api';
 
 
   // Timeout durasi untuk request HTTP

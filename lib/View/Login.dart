@@ -31,9 +31,9 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> saveFcmTokenToServer(String fcmToken, String apiToken, String userType) async {
     String url = '';
     if (userType == 'pembeli') {
-      url = 'http://192.168.54.79:8000/api/save-fcm-token-pembeli';
+      url = 'http://10.0.2.2:8000/api/save-fcm-token-pembeli';
     } else if (userType == 'penitip') {
-      url = 'http://192.168.54.79:8000/api/save-fcm-token-penitip';
+      url = 'http://10.0.2.2:8000/api/save-fcm-token-penitip';
     } else {
       // Handle other user types or error
       print('User type tidak dikenali');
