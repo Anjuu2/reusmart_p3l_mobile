@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reusmart_mobile/View/Merchandise.dart';
 import 'package:reusmart_mobile/View/Pembeli_profile.dart';
 
 class PembeliDashboard extends StatelessWidget {
@@ -14,14 +15,23 @@ class PembeliDashboard extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.store),
+            label: 'Merchandise',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
         ],
         currentIndex: 0,
         onTap: (index) {
-          if (index == 1) {
+          if (index == 2) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => PembeliProfile(namaPembeli: namaPembeli)),
+            );
+          } else if(index == 1){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => MerchandisePage(namaPembeli: namaPembeli)),
             );
           }
         },
