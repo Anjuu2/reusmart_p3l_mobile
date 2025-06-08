@@ -82,9 +82,9 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  static final Map<String, WidgetBuilder> staticRoutes = {
-    '/': (context) => const LoginPage(),
-  };
+  // static final Map<String, WidgetBuilder> staticRoutes = {
+  //   '/': (context) => const LoginPage(),
+  // };
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +100,6 @@ class MyApp extends StatelessWidget {
       // home: HomePage(),
       home: MainNavPage(),
       debugShowCheckedModeBanner: false,
-      // routes: staticRoutes,
       onGenerateRoute: (settings) {
         final args = settings.arguments as Map<String, dynamic>? ?? {};
 
