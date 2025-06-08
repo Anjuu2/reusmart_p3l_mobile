@@ -6,9 +6,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // Import semua halaman dashboard dan login
 import 'package:reusmart_mobile/View/Login.dart';
 import 'package:reusmart_mobile/View/Pembeli_Dashboard.dart';
-import 'package:reusmart_mobile/View/Penitip_Dashboard.dart';
+import 'package:reusmart_mobile/View/Penitip_Profile.dart';
 import 'package:reusmart_mobile/View/Kurir_Dashboard.dart';
 import 'package:reusmart_mobile/View/Hunter_Dashboard.dart';
+import 'package:reusmart_mobile/View/Homepage.dart';
+import 'package:reusmart_mobile/View/BottomNav.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -80,16 +82,24 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  static final Map<String, WidgetBuilder> staticRoutes = {
-    '/': (context) => const LoginPage(),
-  };
+  // static final Map<String, WidgetBuilder> staticRoutes = {
+  //   '/': (context) => const LoginPage(),
+  // };
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ReUseMart',
-      theme: ThemeData(primarySwatch: Colors.green),
-      routes: staticRoutes,
+      theme: ThemeData(
+        primarySwatch: Colors.green,       // <— ini bikin AppBar hijau
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.green,   // pastikan juga di sini
+          foregroundColor: Colors.white,   // untuk teks/icon putih
+        ),
+      ),
+      // home: HomePage(),
+      home: MainNavPage(),
+      debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         final args = settings.arguments as Map<String, dynamic>? ?? {};
 
@@ -102,8 +112,9 @@ class MyApp extends StatelessWidget {
             );
           case '/penitipDashboard':
             return MaterialPageRoute(
-              builder: (_) => PenitipDashboard(
+              builder: (_) => PenitipProfile(
                 namaPenitip: args['nama_penitip'] ?? 'User',
+                // apiToken: args['api_token'] ?? '',
               ),
             );
           case '/kurirDashboard':

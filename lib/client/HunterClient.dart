@@ -2,50 +2,15 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
-class LoginClient {
+class HunterClient {
   static const String baseUrl = 'http://10.0.2.2:8000/api';
-  // static const String baseUrl = 'http://192.168.54.79:8000/api';
-
-  // Timeout durasi untuk request HTTP
   static const Duration timeoutDuration = Duration(seconds: 10);
 
-  Future<Map<String, dynamic>> login(String email, String password, String tipeUser) async {
+  Future<Map<String, dynamic>> getHunterProfile(String token) async {
     try {
       final response = await http
-          .post(
-            Uri.parse('$baseUrl/login'),
-            headers: {'Content-Type': 'application/json'},
-            body: json.encode({
-              'email': email.trim(),
-              'password': password,
-              'tipe_user': tipeUser.toLowerCase(),
-            }),
-          )
-          .timeout(timeoutDuration);
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        return data;
-      } else {
-        return {
-          'success': false,
-          'error': 'Email atau password salah.',
-          'statusCode': response.statusCode,
-          'body': response.body,
-        };
-      }
-    } on TimeoutException {
-      return {'success': false, 'error': 'Request timeout. Coba lagi.'};
-    } catch (e) {
-      return {'success': false, 'error': 'Terjadi kesalahan: $e'};
-    }
-  }
-
-  Future<Map<String, dynamic>> logout(String token) async {
-    try {
-      final response = await http
-          .post(
-            Uri.parse('$baseUrl/logout'),
+          .get(
+            Uri.parse('$baseUrl/hunter-index'),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token',
@@ -59,7 +24,7 @@ class LoginClient {
       } else {
         return {
           'success': false,
-          'error': 'Gagal logout.',
+          'error': 'Gagal mengambil data Hunter.',
           'statusCode': response.statusCode,
           'body': response.body,
         };
@@ -70,4 +35,66 @@ class LoginClient {
       return {'success': false, 'error': 'Terjadi kesalahan: $e'};
     }
   }
+
+  Future<Map<String, dynamic>> getTotalKomisiHunter(String token) async {
+    try {
+      final response = await http
+          .get(
+            Uri.parse('$baseUrl/hunter/komisi/total'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+          )
+          .timeout(timeoutDuration);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data;
+      } else {
+        return {
+          'success': false,
+          'error': 'Gagal mengambil data total komisi hunter.',
+          'statusCode': response.statusCode,
+          'body': response.body,
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'error': 'Request timeout. Coba lagi.'};
+    } catch (e) {
+      return {'success': false, 'error': 'Terjadi kesalahan: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> getHistoryKomisiHunter(String token) async {
+    try {
+      final response = await http
+          .get(
+            Uri.parse('$baseUrl/hunter-history-komisi'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+          )
+          .timeout(timeoutDuration);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data;
+      } else {
+        return {
+          'success': false,
+          'error': 'Gagal mengambil data history komisi.',
+          'statusCode': response.statusCode,
+          'body': response.body,
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'error': 'Request timeout. Coba lagi.'};
+    } catch (e) {
+      return {'success': false, 'error': 'Terjadi kesalahan: $e'};
+    }
+  }
+
+  
 }
