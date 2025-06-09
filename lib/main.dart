@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // Import semua halaman dashboard dan login
 import 'package:reusmart_mobile/View/Login.dart';
-import 'package:reusmart_mobile/View/Pembeli_Dashboard.dart';
+// import 'package:reusmart_mobile/View/Pembeli_Dashboard.dart';
 import 'package:reusmart_mobile/View/Penitip_Profile.dart';
 import 'package:reusmart_mobile/View/Kurir_Dashboard.dart';
 import 'package:reusmart_mobile/View/Hunter_Dashboard.dart';
@@ -104,11 +104,11 @@ class MyApp extends StatelessWidget {
 
         switch (settings.name) {
           case '/pembeliDashboard':
-            return MaterialPageRoute(
-              builder: (_) => PembeliDashboard(
-                namaPembeli: args['nama_pembeli'] ?? 'User',
-              ),
-            );
+            // return MaterialPageRoute(
+              // builder: (_) => PembeliDashboard(
+              //   namaPembeli: args['nama_pembeli'] ?? 'User',
+              // ),
+            // );
           case '/penitipDashboard':
             return MaterialPageRoute(
               builder: (_) => PenitipProfile(

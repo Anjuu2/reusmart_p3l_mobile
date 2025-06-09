@@ -148,18 +148,16 @@ class _PenitipProfileState extends State<PenitipProfile> {
                 ),
                 const SizedBox(height: 20),
 
-                // Info fields
-                _buildProfileField(Icons.phone, 'Nomor Telepon', penitip.notelp ?? 'N/A'),
-                _buildProfileField(Icons.credit_card, 'Nomor KTP', penitip.noKtp ?? 'N/A'),
-                _buildProfileField(Icons.email, 'Email', penitip.email ?? 'N/A'),
-                _buildProfileField(Icons.person, 'Username', penitip.username ?? 'N/A'),
-                _buildProfileField(Icons.home, 'Alamat', penitip.alamat ?? 'N/A'),
-                _buildProfileField(Icons.account_balance_wallet, 'Saldo', 'Rp ${penitip.saldoPenitip?.toStringAsFixed(2) ?? '0.00'}'),
-                _buildProfileField(Icons.verified_user, 'Status Akun', status),
-
-                const SizedBox(height: 20),
-
-                // Tombol Logout
+                _buildProfileField(Icons.email, 'Email', penitip.email),
+                // _buildProfileField(Icons.phone, 'Telepon', penitip.notelp),
+                _buildProfileField(Icons.credit_card, 'No. KTP', penitip.noKtp),
+                _buildProfileField(Icons.person, 'Username', penitip.username),
+                _buildProfileField(Icons.home, 'Alamat', penitip.alamat),
+                _buildProfileField(Icons.monetization_on, 'Poin Anda', penitip.poin.toString()),
+                _buildProfileField(Icons.account_balance_wallet, 'Saldo', penitip.saldoPenitip?.toString()),
+                _buildRatingField(penitip.avgRating, penitip.countRating),
+                _buildProfileField(Icons.verified_user, 'Status', penitip.statusAktif == true ? 'Aktif' : 'Nonaktif'),
+              const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: _handleLogout,
                   icon: const Icon(Icons.logout, color: Colors.white),
