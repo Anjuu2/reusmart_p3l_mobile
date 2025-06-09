@@ -33,15 +33,14 @@ class AboutUsSection extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: Image.network(
-              'http://10.0.2.2:8000/images/barang/reusemart.jpg',
+              'http://10.0.2.2:8000/images/barang/reusemart.jpg?ts=${DateTime.now().millisecondsSinceEpoch}',
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Container(
                 height: 200,
-                color: Colors.grey.shade300,
-                child: Icon(Icons.image_not_supported,
-                    size: 60, color: Colors.grey.shade600),
+                color: Colors.grey[300],
+                child: const Icon(Icons.broken_image, size: 50),
               ),
             ),
           ),

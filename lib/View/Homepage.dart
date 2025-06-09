@@ -85,6 +85,7 @@ class _HomePageState extends State<HomePage> {
     if (res.statusCode == 200) {
       final body = json.decode(res.body) as Map<String, dynamic>;
       final list = body['data'] as List<dynamic>;
+      if (!mounted) return;
       setState(() {
         _products = list
           .map((e) => BarangTitipan.fromJson(e as Map<String, dynamic>))
@@ -98,6 +99,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: false,
       appBar: AppBar(
         // title: Text('ReUseMart'),
         centerTitle: true,                     
@@ -107,7 +109,8 @@ class _HomePageState extends State<HomePage> {
         ),
         elevation: 0,
       ),
-      body: _isLoading
+      body: SafeArea(
+        child: _isLoading
         ? Center(child: CircularProgressIndicator())
         : SingleChildScrollView(
             physics: AlwaysScrollableScrollPhysics(),
@@ -301,6 +304,7 @@ class _HomePageState extends State<HomePage> {
 
             SizedBox(height: 16),
           ],
+            ),
         ),
       )
     );

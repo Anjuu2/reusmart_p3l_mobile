@@ -22,7 +22,7 @@ class PenitipDashboard extends StatelessWidget {
           if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => PenitipProfile(namaPenitip: namaPenitip, apiToken: apiToken)),
+              MaterialPageRoute(builder: (_) => PenitipProfile(namaPenitip: namaPenitip)),
             );
           }
         },
