@@ -108,10 +108,9 @@ class _KurirProfileState extends State<KurirProfile> {
 
           final profile = data['data'];
           final nama = profile['nama_pegawai'] ?? '-';
-          final username = profile['username'] ?? '-';
           final email = profile['email'] ?? '-';
           final notelp = profile['notelp'] ?? '-';
-          final status = 'Aktif'; // Asumsi aktif, ubah sesuai logic backend
+          final status = profile['status_aktif']? 'Aktif' : 'Tidak Aktif';
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),

@@ -124,6 +124,9 @@ class _LoginPageState extends State<LoginPage> {
         String email = response['user']['email'];
         String namaUser = email.split('@')[0];
 
+        await _storage.write(key: 'role', value: userType);
+        await _storage.write(key: 'nama_user', value: namaUser);
+
         String? redirectPage = response['redirect_page'];
         if (redirectPage == null) {
           setState(() {
@@ -134,10 +137,15 @@ class _LoginPageState extends State<LoginPage> {
 
         switch (redirectPage) {
           case 'dashboard.pembeli':
-            Navigator.pushReplacementNamed(
+            // Navigator.pushReplacementNamed(
+            //   context,
+            //   '/pembeliDashboard',
+            //   arguments: {'nama_pembeli': namaUser},
+            // );
+            Navigator.pushAndRemoveUntil(
               context,
-              '/pembeliDashboard',
-              arguments: {'nama_pembeli': namaUser},
+              MaterialPageRoute(builder: (_) => MainNavPage()),
+              (route) => false,
             );
             break;
           case 'dashboard.penitip':
@@ -145,6 +153,11 @@ class _LoginPageState extends State<LoginPage> {
               context,
               '/penitipDashboard',
               arguments: {'nama_penitip': namaUser},
+            );
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => MainNavPage()),
+              (route) => false,
             );
             break;
           case 'dashboard.kurir':

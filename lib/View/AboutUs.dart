@@ -39,9 +39,8 @@ class AboutUsSection extends StatelessWidget {
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Container(
                 height: 200,
-                color: Colors.grey.shade300,
-                child: Icon(Icons.image_not_supported,
-                    size: 60, color: Colors.grey.shade600),
+                color: Colors.grey[300],
+                child: const Icon(Icons.broken_image, size: 50),
               ),
             ),
           ),

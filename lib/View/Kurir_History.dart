@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:reusmart_mobile/client/KurirClient.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-
 class KurirHistoryPengirimanPage extends StatefulWidget {
   const KurirHistoryPengirimanPage({Key? key}) : super(key: key);
 
@@ -49,7 +48,7 @@ class _KurirHistoryPengirimanPageState extends State<KurirHistoryPengirimanPage>
 
           final data = snapshot.data!;
           if (data['success'] == false) {
-            return Center(child: Text(data['message'] ?? 'Gagal memuat data.'));
+            return Center(child: Text(data['error'] ?? 'Gagal memuat data.'));
           }
 
           final pengirimanList = data['data'] as List<dynamic>;
@@ -61,22 +60,22 @@ class _KurirHistoryPengirimanPageState extends State<KurirHistoryPengirimanPage>
             itemCount: pengirimanList.length,
             itemBuilder: (context, index) {
               final pengiriman = pengirimanList[index];
-              final idPengirim = pengiriman['id_pengirim'] ?? '-';
-              final idTransaksi = pengiriman['id_transaksi'] ?? '-';
-              final metode = pengiriman['metode_pengiriman'] ?? '-';
-              final tanggal = pengiriman['created_at'] ?? '-'; // Pastikan field ini tersedia di API
+              final idPengiriman = pengiriman['id_pengiriman']?.toString() ?? '-';
+              final namaBarang = pengiriman['nama_barang'] ?? '-';
+              final tanggalJadwal = pengiriman['tanggal_jadwal'] ?? '-';
+              final statusPengiriman = pengiriman['status_pengiriman'] ?? '-';
 
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ListTile(
                   leading: const Icon(Icons.local_shipping, color: Color.fromRGBO(0, 128, 0, 0.7)),
-                  title: Text('ID Pengiriman: $idPengirim'),
+                  title: Text(namaBarang, style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('ID Transaksi: $idTransaksi'),
-                      Text('Metode: $metode'),
-                      Text('Tanggal: $tanggal'),
+                      Text('ID Pengiriman: $idPengiriman'),
+                      Text('Tanggal Jadwal: $tanggalJadwal'),
+                      Text('Status: $statusPengiriman'),
                     ],
                   ),
                 ),

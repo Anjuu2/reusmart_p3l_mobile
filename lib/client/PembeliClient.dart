@@ -117,5 +117,35 @@ class PembeliClient {
       return {'success': false, 'error': 'Terjadi kesalahan: $e'};
     }
   }
+
+  Future<Map<String, dynamic>> getPembeliHistoryPembelian(String token) async {
+    try {
+      final response = await http
+          .get(
+            Uri.parse('$baseUrl/pembeli-history'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+          )
+          .timeout(timeoutDuration);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data;
+      } else {
+        return {
+          'success': false,
+          'error': 'Gagal mengambil history pengiriman.',
+          'statusCode': response.statusCode,
+          'body': response.body,
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'error': 'Request timeout. Coba lagi.'};
+    } catch (e) {
+      return {'success': false, 'error': 'Terjadi kesalahan: $e'};
+    }
+  }
   
 }

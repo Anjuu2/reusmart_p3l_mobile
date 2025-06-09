@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:reusmart_mobile/client/PembeliClient.dart';
 import 'package:reusmart_mobile/client/LoginClient.dart';
-import 'package:reusmart_mobile/View/Pembeli_Dashboard.dart';
+// import 'package:reusmart_mobile/View/Pembeli_Dashboard.dart';
 import 'package:reusmart_mobile/View/Merchandise.dart';
 import 'package:reusmart_mobile/View/Login.dart';
+import 'package:reusmart_mobile/View/BottomNav.dart';
+import 'package:reusmart_mobile/View/Pembeli_History.dart';
 
 class PembeliProfile extends StatefulWidget {
   final String namaPembeli;
@@ -36,6 +38,30 @@ class _PembeliProfileState extends State<PembeliProfile> {
     return await _pembeliClient.getPembeliProfile(token);
   }
 
+  Future<void> _confirmLogout() async {
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Konfirmasi Logout'),
+        content: const Text('Apakah kamu yakin ingin logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false), // batal logout
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true), // konfirmasi logout
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout == true) {
+      await _handleLogout();
+    }
+  }
+  
   Future<void> _handleLogout() async {
     final token = await _storage.read(key: 'api_token');
     if (token == null) {
@@ -51,7 +77,7 @@ class _PembeliProfileState extends State<PembeliProfile> {
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const LoginPage()),
+        MaterialPageRoute(builder: (_) => const MainNavPage()),
         (route) => false,
       );
     } else {
@@ -88,7 +114,8 @@ class _PembeliProfileState extends State<PembeliProfile> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title: const Text('Profil Pembeli'),
+        title: const Text('My Profile'),
+        centerTitle: true,
         backgroundColor: const Color.fromRGBO(0, 128, 0, 0.7),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
@@ -145,13 +172,33 @@ class _PembeliProfileState extends State<PembeliProfile> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildProfileField(Icons.phone, 'Nomor Telepon', notelp),
-                _buildProfileField(Icons.verified_user, 'Status Akun', status),
                 _buildProfileField(Icons.email, 'Email', email),
+                _buildProfileField(Icons.person, 'Username', username),
+                _buildProfileField(Icons.phone, 'Nomor Telepon', notelp),
                 _buildProfileField(Icons.monetization_on, 'Poin Anda', poin),
-                const SizedBox(height: 20),
+                _buildProfileField(Icons.verified_user, 'Status Akun', status),
+                const SizedBox(height: 10),
+                // Tombol History Pengiriman
                 ElevatedButton.icon(
-                  onPressed: _handleLogout,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const PembeliHistoryPage()),
+                    );
+                  },
+                  icon: const Icon(Icons.history, color: Colors.white),
+                  label: const Text('Lihat History Pembelian', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(0, 128, 0, 0.7), // Tombol hijau
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton.icon(
+                  onPressed: _confirmLogout,
                   icon: const Icon(Icons.logout, color: Colors.white),
                   label: const Text('Logout', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
@@ -167,34 +214,34 @@ class _PembeliProfileState extends State<PembeliProfile> {
           );
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 2,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.store),
-            label: 'Merchandise',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => PembeliDashboard(namaPembeli: widget.namaPembeli),
-              ),
-            );
-          } else if (index == 1){
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => MerchandisePage(namaPembeli: widget.namaPembeli),
-              ),
-            );
-          }
-        },
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: 2,
+      //   items: const [
+      //     BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.store),
+      //       label: 'Merchandise',
+      //     ),
+      //     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+      //   ],
+      //   onTap: (index) {
+      //     if (index == 0) {
+      //       Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (_) => PembeliDashboard(namaPembeli: widget.namaPembeli),
+      //         ),
+      //       );
+      //     } else if (index == 1){
+      //       Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (_) => MerchandisePage(namaPembeli: widget.namaPembeli),
+      //         ),
+      //       );
+      //     }
+      //   },
+      // ),
     );
   }
 }

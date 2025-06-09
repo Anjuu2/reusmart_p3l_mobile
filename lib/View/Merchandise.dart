@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:reusmart_mobile/View/Pembeli_profile.dart';
 import 'package:reusmart_mobile/client/PembeliClient.dart';
-import 'package:reusmart_mobile/View/Pembeli_Dashboard.dart';
+// import 'package:reusmart_mobile/View/Pembeli_Dashboard.dart';
 import 'package:reusmart_mobile/View/RewardHistoryPage.dart';
 
 class MerchandisePage extends StatefulWidget {
@@ -230,31 +230,31 @@ class _MerchandisePageState extends State<MerchandisePage> {
           );
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-          BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Merchandise'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => PembeliDashboard(namaPembeli: widget.namaPembeli),
-              ),
-            );
-          } else if (index == 2) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => PembeliProfile(namaPembeli: widget.namaPembeli),
-              ),
-            );
-          }
-        },
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: 1,
+      //   items: const [
+      //     BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+      //     BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Merchandise'),
+      //     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+      //   ],
+      //   onTap: (index) {
+      //     if (index == 0) {
+      //       Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (_) => PembeliDashboard(namaPembeli: widget.namaPembeli),
+      //         ),
+      //       );
+      //     } else if (index == 2) {
+      //       Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (_) => PembeliProfile(namaPembeli: widget.namaPembeli),
+      //         ),
+      //       );
+      //     }
+      //   },
+      // ),
     );
   }
 }
