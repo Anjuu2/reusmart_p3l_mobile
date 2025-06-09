@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'dart:async'; // Untuk debounce
+import 'DetailProductPage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class AllProductsPage extends StatefulWidget {
   @override
@@ -12,65 +14,125 @@ class AllProductsPage extends StatefulWidget {
 class _AllProductsPageState extends State<AllProductsPage> {
   List<Map<String, dynamic>> _allProducts = [];
   bool _isLoading = true;
+  bool _isError = false;  // Handle error state
   TextEditingController _searchController = TextEditingController();
   Timer? _debounce;
-  List<String> categories = ["Semua", "Category 1", "Category 2", "Category 3"]; // Example categories
-  String selectedCategory = "";
+  List<String> categories = []; // Dynamic categories
+  String selectedCategory = "Semua";  // Default category is "Semua"
+  bool _isFetching = false; // Prevent multiple simultaneous fetches
+  int _currentPage = 1; // Track the current page for pagination
+  bool _hasMoreProducts = true; // Flag to check if there are more products
 
-  static const apiUrl = 'http://10.0.2.2:8000/api';
+  static const apiUrl = 'http://10.0.2.2:8000/api';  // Make sure API is reachable
 
   @override
   void initState() {
     super.initState();
-    _fetchAllProducts();  // Load initial products
+    _fetchCategories();  // Fetch categories on init
   }
 
-  // Fetch all products or products based on search query
-  Future<void> _fetchAllProducts([String? query]) async {
-    final url = query == null
-        ? '$apiUrl/barangsMobile'  // Fetch all products if no query
-        : '$apiUrl/barangsMobile?search=$query';  // Use search query if provided
+  // Fetch categories from the API
+  Future<void> _fetchCategories() async {
+    final url = '$apiUrl/kategoriMobile';  // Endpoint for fetching categories
 
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {'Accept': 'application/json'},
-    );
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Accept': 'application/json'},
+      );
 
-    if (response.statusCode == 200) {
-      final body = json.decode(response.body) as Map<String, dynamic>;
-      final List<dynamic> list = body['data'];
+      if (response.statusCode == 200) {
+        final body = json.decode(response.body) as Map<String, dynamic>;
+        final List<dynamic> list = body['data'];
+        setState(() {
+          categories = ['Semua'] + list.map<String>((category) => category['nama_kategori']).toList(); // Add "Semua"
+        });
+        // After categories are loaded, fetch products
+        _fetchAllProducts();  
+      } else {
+        setState(() {
+          _isLoading = false;
+          _isError = true; // Set error state if categories fail to load
+        });
+      }
+    } catch (e) {
       setState(() {
-        _allProducts = List<Map<String, dynamic>>.from(list);
         _isLoading = false;
+        _isError = true;
       });
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-      throw Exception('Failed to load products');
+      print('Error fetching categories: $e');
     }
   }
 
-  // Fetch product by ID
-  Future<void> _fetchProductById(String id) async {
-    final url = '$apiUrl/barangsMobile/$id';  // Fetch product by ID
+  // Fetch products from the API
+  Future<void> _fetchAllProducts([String? query]) async {
+    if (_isFetching) return;  // Prevent multiple simultaneous fetches
+    setState(() {
+      _isFetching = true;
+      _isLoading = true; // Set loading state to true while fetching data
+    });
 
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {'Accept': 'application/json'},
-    );
+    // If query is empty, replace with an empty string ""
+    final searchQuery = query?.isEmpty ?? true ? "" : query;
 
-    if (response.statusCode == 200) {
-      final body = json.decode(response.body) as Map<String, dynamic>;
+    final categoryId = selectedCategory != "Semua"
+        ? categories.indexOf(selectedCategory)  // Find category ID based on name
+        : null;
+
+    final url = categoryId == null
+        ? '$apiUrl/barangsMobile?search=$searchQuery&page=$_currentPage'  // Fetch all products with pagination
+        : '$apiUrl/barangsMobile?search=$searchQuery&category_id=$categoryId&page=$_currentPage';  // Filter products based on search and category with pagination
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Accept': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final body = json.decode(response.body) as Map<String, dynamic>;
+
+        if (body['data'] != null && body['data'] is Map<String, dynamic>) {
+          final data = body['data'];
+
+          // Ensure 'data' is a Map and 'data['data']' contains a list
+          if (data['data'] is List) {
+            final List<dynamic> products = data['data'];
+
+            setState(() {
+              _allProducts.addAll(products.map<Map<String, dynamic>>((product) => Map<String, dynamic>.from(product)));
+              _isLoading = false;
+              _isFetching = false;
+              _currentPage++; // Increment the page number for the next fetch
+              _hasMoreProducts = data['next_page_url'] != null; // Check if there are more pages
+            });
+          } else {
+            setState(() {
+              _isLoading = false;
+              _isFetching = false;
+            });
+            throw Exception('Data produk tidak ditemukan');
+          }
+        } else {
+          setState(() {
+            _isLoading = false;
+            _isFetching = false;
+          });
+          throw Exception('Invalid data structure');
+        }
+      } else {
+        setState(() {
+          _isLoading = false;
+          _isFetching = false;
+        });
+        print('Failed to load products');
+      }
+    } catch (e) {
       setState(() {
-        _allProducts = [body['data']];  // Return a single product
         _isLoading = false;
+        _isFetching = false;
       });
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-      throw Exception('Failed to load product details');
+      print('Error fetching products: $e');
     }
   }
 
@@ -91,6 +153,16 @@ class _AllProductsPageState extends State<AllProductsPage> {
   // Handle submit search when pressing Enter
   void _onSearchSubmit(String value) {
     _fetchAllProducts(value);  // Trigger search with query
+  }
+
+  // Handle category change
+  void _onCategorySelected(String category) {
+    setState(() {
+      selectedCategory = category;  // Set selected category
+      _allProducts.clear(); // Clear previous products before fetching new ones
+      _currentPage = 1; // Reset to page 1
+    });
+    _fetchAllProducts();  // Fetch products based on selected category
   }
 
   @override
@@ -134,10 +206,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: ElevatedButton(
                         onPressed: () {
-                          setState(() {
-                            selectedCategory = category;
-                          });
-                          _fetchAllProducts();  // Fetch products based on selected category
+                          _onCategorySelected(category);  // Select category
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: selectedCategory == category
@@ -172,45 +241,73 @@ class _AllProductsPageState extends State<AllProductsPage> {
                         final product = _allProducts[index];
                         final imageUrl = 'http://10.0.2.2:8000/images/barang/${product['foto_barang'][0]['nama_file'] ?? 'default.jpg'}';
 
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 4,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Image.network(
-                                imageUrl,
-                                fit: BoxFit.cover,
-                                height: 150,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                                child: Text(
-                                  product['nama_barang'] ?? '-',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                  formatPrice(product['harga_jual']),  // Format price
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                        return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailProductPage(product: product),
+                                    ),
+                                  );
+                                },
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  textAlign: TextAlign.center,
+                                  elevation: 4,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      CachedNetworkImage(
+                                          imageUrl: imageUrl,  
+                                          fit: BoxFit.cover,
+                                          height: 150, 
+                                          placeholder: (context, url) => const CircularProgressIndicator(), // Menampilkan loading indicator saat gambar dimuat
+                                          errorWidget: (context, url, error) => const Icon(Icons.error), // Menampilkan icon error jika gagal memuat gambar
+                                        ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                                        child: Text(
+                                          product['nama_barang'] ?? '-',
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                        child: Text(
+                                          formatPrice(product['harga_jual']),
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green, // Harga sekarang berwarna hijau
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
+                              );
                       },
                     ),
                   ),
+
+            // Load More Button
+            if (_hasMoreProducts)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _fetchAllProducts();  // Load more products
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green, // Use the same color as category buttons
+                    foregroundColor: Colors.white // Text color changes based on category selection
+                  ),
+                  child: const Text("Load More"),
+                ),
+              ),
           ],
         ),
       ),
