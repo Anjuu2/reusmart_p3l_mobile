@@ -44,6 +44,30 @@ class _RewardHistoryPageState extends State<RewardHistoryPage> {
     }
   }
 
+  Widget _buildDetailText(String label, dynamic value) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: Row(
+        children: [
+          Text(
+            '$label ',
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value?.toString() ?? '-',
+              style: const TextStyle(fontSize: 16),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,18 +75,18 @@ class _RewardHistoryPageState extends State<RewardHistoryPage> {
         title: const Text('History Klaim Merchandise'),
         backgroundColor: const Color.fromRGBO(0, 128, 0, 0.7),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
+      body: FutureBuilder<List<Map<String, dynamic>>>( // Use FutureBuilder to display reward history data
         future: _historyFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator()); // Show loading indicator while waiting
           }
           if (snapshot.hasError) {
-            return Center(child: Text('Terjadi kesalahan: ${snapshot.error}'));
+            return Center(child: Text('Terjadi kesalahan: ${snapshot.error}')); // Display error message
           }
           final historyList = snapshot.data ?? [];
           if (historyList.isEmpty) {
-            return const Center(child: Text('Belum ada history klaim.'));
+            return const Center(child: Text('Belum ada history klaim.')); // Show if no history
           }
           return ListView.builder(
             itemCount: historyList.length,
@@ -75,10 +99,10 @@ class _RewardHistoryPageState extends State<RewardHistoryPage> {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Poin: ${item['jumlah_tukar_poin']}'),
-                      Text('Tanggal Klaim: ${item['tanggal_klaim']}'),
-                      Text('Tanggal Ambil: ${item['tanggal_ambil']}'),
-                      Text('Status: ${item['status_penukaran']}'),
+                      _buildDetailText('Poin:', item['jumlah_tukar_poin']),
+                      _buildDetailText('Tanggal Klaim:', item['tanggal_klaim']),
+                      _buildDetailText('Tanggal Ambil:', item['tanggal_ambil']),
+                      _buildDetailText('Status:', item['status_penukaran']),
                     ],
                   ),
                 ),

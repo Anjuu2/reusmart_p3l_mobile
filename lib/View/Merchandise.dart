@@ -4,6 +4,7 @@ import 'package:reusmart_mobile/View/Pembeli_profile.dart';
 import 'package:reusmart_mobile/client/PembeliClient.dart';
 import 'package:reusmart_mobile/View/Pembeli_Dashboard.dart';
 import 'package:reusmart_mobile/View/RewardHistoryPage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MerchandisePage extends StatefulWidget {
   final String namaPembeli;
@@ -66,11 +67,14 @@ class _MerchandisePageState extends State<MerchandisePage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Batal'),
+            child: const Text('Batal'),style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.black, // White text color
+                          ),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromRGBO(0, 128, 0, 0.7),
+              foregroundColor: Colors.white,
             ),
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('Klaim'),
@@ -170,14 +174,19 @@ class _MerchandisePageState extends State<MerchandisePage> {
                       Expanded(
                         child: ClipRRect(
                           borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                          child: Image.network(
-                            item['gambar_url'] ?? '',
+                          child: CachedNetworkImage(
+                            imageUrl: item['gambar_url'] ?? '',
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                'assets/images/merchandise_placeholder.png',
-                                fit: BoxFit.cover,
-                              );
+                            errorWidget: (context, error, stackTrace) {
+                              return CachedNetworkImage(
+                                    imageUrl: 'https://banksuryaarthautama.co.id/wp-content/themes/carlax/images/no-image.jpg',
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, error, stackTrace) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),  // Optionally, you can show a loading indicator while the image loads
+                                      );
+                                    },
+                                  );
                             },
                           ),
                         ),
@@ -217,7 +226,8 @@ class _MerchandisePageState extends State<MerchandisePage> {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromRGBO(0, 128, 0, 0.7),
+                            backgroundColor: const Color.fromRGBO(0, 128, 0, 0.7), // Green background
+                            foregroundColor: Colors.white, // White text color
                           ),
                           child: const Text('Klaim'),
                         ),
