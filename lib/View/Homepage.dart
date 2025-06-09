@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'dart:math';  
 import 'package:reusmart_mobile/View/AboutUs.dart';
-import 'package:reusmart_mobile/View/Login.dart';
+import 'package:reusmart_mobile/View/AllProductsPage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -266,34 +266,38 @@ class _HomePageState extends State<HomePage> {
             SizedBox(height: 16),
 
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: GestureDetector(
-                onTap: () {
-                  // Aksi saat "Lihat Semua Produk" ditekan, misal navigasi ke halaman produk lengkap
-                  print('Lihat Semua Produk ditekan');
-                  // Navigator.push(...);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Lihat Semua Produk',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: GestureDetector(
+                      onTap: () {
+                        // Navigate to the All Products page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => AllProductsPage(), // New Page
+                          ),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Lihat Semua Produk',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(width: 4),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 14,
+                            color: Colors.blue,
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(width: 4),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
 
             SizedBox(height: 16),
 
