@@ -206,7 +206,7 @@ class _PenitipProfileState extends State<PenitipProfile> {
                 _buildProfileField(Icons.credit_card, 'No. KTP', penitip.noKtp),
                 _buildProfileField(Icons.person, 'Username', penitip.username),
                 _buildProfileField(Icons.home, 'Alamat', penitip.alamat),
-                _buildProfileField(Icons.emoji_events, 'Poin', penitip.poin.toString()),
+                _buildProfileField(Icons.monetization_on, 'Poin Anda', penitip.poin.toString()),
                 _buildProfileField(Icons.account_balance_wallet, 'Saldo', penitip.saldoPenitip?.toString()),
                 _buildRatingField(penitip.avgRating, penitip.countRating),
                 _buildProfileField(Icons.verified_user, 'Status', penitip.statusAktif == true ? 'Aktif' : 'Nonaktif'),

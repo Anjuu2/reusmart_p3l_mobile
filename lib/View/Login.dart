@@ -98,6 +98,12 @@ class _LoginPageState extends State<LoginPage> {
         // Simpan API Token di secure storage
         await _storage.write(key: 'api_token', value: apiToken);
         print("API Token disimpan di secure storage.");
+        
+        if (response['user']['id_pembeli'] != null) {
+          String idPembeli = response['user']['id_pembeli'].toString();
+          await _storage.write(key: 'id_pembeli', value: idPembeli);
+          print("ID Pembeli disimpan di secure storage: $idPembeli");
+        }
 
         String? fcmToken = await getFcmToken();
         String userType = _selectedUserType!.toLowerCase();
@@ -131,10 +137,15 @@ class _LoginPageState extends State<LoginPage> {
 
         switch (redirectPage) {
           case 'dashboard.pembeli':
-            Navigator.pushReplacementNamed(
+            // Navigator.pushReplacementNamed(
+            //   context,
+            //   '/pembeliDashboard',
+            //   arguments: {'nama_pembeli': namaUser},
+            // );
+            Navigator.pushAndRemoveUntil(
               context,
-              '/pembeliDashboard',
-              arguments: {'nama_pembeli': namaUser},
+              MaterialPageRoute(builder: (_) => MainNavPage()),
+              (route) => false,
             );
             break;
           case 'dashboard.penitip':
