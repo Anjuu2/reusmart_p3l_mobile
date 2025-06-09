@@ -10,6 +10,7 @@ class BarangTitipan {
   final int idKategori;
   final DateTime? tanggalMasuk;
   final DateTime? tanggalKeluar;
+  final DateTime? tanggalAkhir;
   final bool statusPerpanjangan;
   final String namaBarang;
   final double? hargaJual;
@@ -30,6 +31,7 @@ class BarangTitipan {
     required this.idKategori,
     this.tanggalMasuk,
     this.tanggalKeluar,
+    this.tanggalAkhir,
     required this.statusPerpanjangan,
     required this.namaBarang,
     this.hargaJual,
@@ -98,6 +100,7 @@ class BarangTitipan {
       idKategori: tryParseInt(json['id_kategori']) ?? 0,
       tanggalMasuk: tryParseDate(json['tanggal_masuk']),
       tanggalKeluar: tryParseDate(json['tanggal_keluar']),
+      tanggalAkhir: tryParseDate(json['tanggal_akhir']),
       statusPerpanjangan:
           tryParseBool(json['status_perpanjangan']) ?? false,
       namaBarang: json['nama_barang'] as String? ?? '',
@@ -121,6 +124,7 @@ class BarangTitipan {
         'id_kategori': idKategori,
         'tanggal_masuk': tanggalMasuk?.toIso8601String(),
         'tanggal_keluar': tanggalKeluar?.toIso8601String(),
+        'tanggal_akhir': tanggalAkhir?.toIso8601String(),
         'status_perpanjangan': statusPerpanjangan,
         'nama_barang': namaBarang,
         'harga_jual': hargaJual,
