@@ -99,6 +99,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: HomePage(),
       home: MainNavPage(),
+      // home: LoginPage(),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         final args = settings.arguments as Map<String, dynamic>? ?? {};

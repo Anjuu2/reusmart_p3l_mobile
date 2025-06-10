@@ -8,6 +8,8 @@ import 'package:shimmer/shimmer.dart';
 import 'dart:math';  
 import 'package:reusmart_mobile/View/AboutUs.dart';
 import 'package:reusmart_mobile/View/Login.dart';
+import 'package:reusmart_mobile/entity/Penitip.dart';
+import 'package:reusmart_mobile/entity/TopSeller.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,6 +26,10 @@ class _HomePageState extends State<HomePage> {
   static const apiUrl  = 'http://10.0.2.2:8000/api';
   static const hostUrl = 'http://10.0.2.2:8000';
 
+  TopSeller? _topSeller;
+  Penitip? _topSellerInfo;
+
+
   final List<Widget> _pages = [
     HomePage(),    
   ];
@@ -32,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _initData();
+    _loadTopSeller();
   }
 
   Future<void> _initData() async {
@@ -52,6 +59,27 @@ class _HomePageState extends State<HomePage> {
       _banners = banners;
       _isLoading = false;
     });
+  }
+
+  Future<void> _loadTopSeller() async {
+    try {
+      final response = await http.get(Uri.parse('$apiUrl/top-seller/current-month'));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        final data = jsonData['data'];
+        final seller = TopSeller.fromJson(data);
+        final penitipRes = await http.get(Uri.parse('$apiUrl/penitip/${seller.idPenitip}'));
+        if (penitipRes.statusCode == 200) {
+          final penitipData = json.decode(penitipRes.body)['data'];
+          setState(() {
+            _topSeller = seller;
+            _topSellerInfo = Penitip.fromJson(penitipData);
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Failed to load top seller: $e');
+    }
   }
 
   Future<void> _loadCategories() async {
@@ -170,6 +198,46 @@ class _HomePageState extends State<HomePage> {
               ),
 
               SizedBox(height: 16),
+
+              if (_topSeller != null && _topSellerInfo != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  child: Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Colors.amber,
+                            child: Icon(Icons.star, color: Colors.white),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '🎖️ Top Seller Bulan Ini',
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                ),
+                                Text(
+                                  '${_topSellerInfo!.namaPenitip}',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                Text(
+                                  'Total Penjualan: Rp ${_topSeller!.totalPenjualan}',
+                                  style: TextStyle(color: Colors.green[800]),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
 
               // Judul “Terpopuler”
               Padding(

@@ -188,13 +188,34 @@ class _PenitipProfileState extends State<PenitipProfile> {
                         backgroundImage: AssetImage(fotoPath),
                       ),
                       const SizedBox(height: 12),
-                      Text(
-                        penitip.namaPenitip,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Column(
+                        children: [
+                          Text(
+                            penitip.namaPenitip,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (penitip.isTopSeller == true)
+                            Container(
+                              margin: const EdgeInsets.only(top: 6),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.amber[700],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Text(
+                                "🎖️ Top Seller Bulan Ini",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),

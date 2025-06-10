@@ -15,6 +15,8 @@ class Penitip {
   final bool? statusAktif;
   final double? avgRating;
   final int? countRating;
+  final bool? isTopSeller;
+
 
   Penitip({
     required this.idPenitip,
@@ -31,6 +33,7 @@ class Penitip {
     this.statusAktif,
     this.avgRating,
     this.countRating,
+    this.isTopSeller,
   });
 
   // Method untuk membuat objek Penitip dari raw JSON
@@ -56,6 +59,8 @@ class Penitip {
     countRating: json['countRating'] != null
         ? int.tryParse(json['countRating'].toString()) ?? 0
         : 0,
+    isTopSeller: json['is_top_seller'] ?? false,
+
   );
 
   // Mengubah objek Penitip ke format JSON

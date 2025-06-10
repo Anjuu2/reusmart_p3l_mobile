@@ -7,7 +7,9 @@ import 'package:reusmart_mobile/View/Login.dart';
 import 'package:reusmart_mobile/View/Pembeli_Profile.dart';    
 import 'package:reusmart_mobile/View/Penitip_Profile.dart';    
 import 'package:reusmart_mobile/View/Penitip_History.dart';    
-import 'package:reusmart_mobile/View/Profile.dart';           
+import 'package:reusmart_mobile/View/Profile.dart';
+import 'package:reusmart_mobile/View/TopSellerPage.dart';           
+
 
 class MainNavPage extends StatefulWidget {
   const MainNavPage({Key? key}) : super(key: key);
@@ -63,6 +65,7 @@ class _MainNavPageState extends State<MainNavPage> {
       default: // guest
         return [
           HomePage(),
+          TopSellerPage(),
           LoginPage(),
         ];
     }
@@ -85,6 +88,7 @@ class _MainNavPageState extends State<MainNavPage> {
       default:
         return const [
           BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Top Seller'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ];
     }
