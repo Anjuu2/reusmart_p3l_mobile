@@ -1,39 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:reusmart_mobile/View/Hunter_Profile.dart';
+import 'package:reusmart_mobile/View/Hunter_profile.dart';
 
-class HunterDashboard extends StatefulWidget {
-  @override
-  _HunterDashboardState createState() => _HunterDashboardState();
-}
-
-class _HunterDashboardState extends State<HunterDashboard> {
-  int _currentIndex = 0;
-  late String namaHunter;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    namaHunter = args != null ? args['nama_pegawai'] ?? 'User' : 'User';
-  }
+class HunterDashboard extends StatelessWidget {
+  final String namaHunter;
+  const HunterDashboard({Key? key, required this.namaHunter}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final pages = [
-      Center(child: Text('Ini halaman dashboard hunter')),
-      HunterProfile(namaHunter: namaHunter),
-    ];
-
+    print('Nama hunter di dashboard: $namaHunter');
     return Scaffold(
       appBar: AppBar(title: Text('Selamat datang, $namaHunter')),
-      body: pages[_currentIndex],
+      body: Center(child: Text('Ini halaman dashboard hunter')),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
         ],
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => HunterProfile(namaHunter: namaHunter)),
+            );
+          }
+        },
       ),
     );
   }

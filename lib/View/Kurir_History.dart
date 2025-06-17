@@ -1,47 +1,42 @@
-import 'dart:convert';
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:reusmart_mobile/client/KurirClient.dart';
-import 'package:reusmart_mobile/View/Kurir_profile.dart';
-import 'package:reusmart_mobile/View/Kurir_DetailPengiriman.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class KurirDashboard extends StatefulWidget {
-  final String namaKurir;
-  const KurirDashboard({Key? key, required this.namaKurir}) : super(key: key);
+class KurirHistoryPengirimanPage extends StatefulWidget {
+  const KurirHistoryPengirimanPage({Key? key}) : super(key: key);
 
   @override
-  State<KurirDashboard> createState() => _KurirDashboardState();
+  State<KurirHistoryPengirimanPage> createState() => _KurirHistoryPengirimanPageState();
 }
 
-class _KurirDashboardState extends State<KurirDashboard> {
+class _KurirHistoryPengirimanPageState extends State<KurirHistoryPengirimanPage> {
   final KurirClient _kurirClient = KurirClient();
   final _storage = const FlutterSecureStorage();
-  late Future<Map<String, dynamic>> _pengirimanFuture;
+  late Future<Map<String, dynamic>> _historyFuture;
 
   @override
   void initState() {
     super.initState();
-    _pengirimanFuture = _fetchPengiriman();
+    _historyFuture = _fetchHistory();
   }
 
-  Future<Map<String, dynamic>> _fetchPengiriman() async {
+  Future<Map<String, dynamic>> _fetchHistory() async {
     String? token = await _storage.read(key: 'api_token');
     if (token == null) {
       return {'success': false, 'error': 'Token tidak tersedia.'};
     }
-    return await _kurirClient.getKurirPengiriman(token);
+    return await _kurirClient.getKurirHistoryPengiriman(token);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Selamat datang, ${widget.namaKurir}'),
+        title: const Text('History Pengiriman'),
         backgroundColor: const Color.fromRGBO(0, 128, 0, 0.7),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: _pengirimanFuture,
+        future: _historyFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -58,7 +53,7 @@ class _KurirDashboardState extends State<KurirDashboard> {
 
           final pengirimanList = data['data'] as List<dynamic>;
           if (pengirimanList.isEmpty) {
-            return const Center(child: Text('Belum ada pengiriman yang tersedia.'));
+            return const Center(child: Text('Belum ada pengiriman yang sampai.'));
           }
 
           return ListView.builder(
@@ -68,6 +63,7 @@ class _KurirDashboardState extends State<KurirDashboard> {
               final idPengiriman = pengiriman['id_pengiriman']?.toString() ?? '-';
               final namaBarang = pengiriman['nama_barang'] ?? '-';
               final tanggalJadwal = pengiriman['tanggal_jadwal'] ?? '-';
+              final statusPengiriman = pengiriman['status_pengiriman'] ?? '-';
 
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -79,37 +75,13 @@ class _KurirDashboardState extends State<KurirDashboard> {
                     children: [
                       Text('ID Pengiriman: $idPengiriman'),
                       Text('Tanggal Jadwal: $tanggalJadwal'),
+                      Text('Status: $statusPengiriman'),
                     ],
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => KurirDetailPengirimanPage(idPengiriman: idPengiriman),
-                      ),
-                    );
-                  },
                 ),
               );
             },
           );
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0, // index 0 karena ini dashboard
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        ],
-        onTap: (index) {
-          if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => KurirProfile(namaKurir: widget.namaKurir),
-              ),
-            );
-          }
         },
       ),
     );

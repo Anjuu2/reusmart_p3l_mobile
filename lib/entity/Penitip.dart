@@ -1,30 +1,38 @@
 import 'dart:convert';
 
 class Penitip {
-  int id_penitip;
-  String nama_penitip;
-  String email;
-  String notelp;
-  String alamat;
-  double saldo_penitip;
-  String no_ktp;         // Menambahkan field no_ktp
-  String username;       // Menambahkan field username
-  String password;       // Menambahkan field password
-  String foto_ktp;       // Menambahkan field foto_ktp
-  bool status_aktif;     // Menambahkan field status_aktif (boolean)
+  final int idPenitip;
+  final int? poin;
+  final String namaPenitip;
+  final String email;
+  final String alamat;
+  final double saldoPenitip;
+  final String noKtp;
+  final String username;
+  final String? password;
+  final String? fotoKtp;
+  final bool? statusAktif;
+  final double? avgRating;
+  final int? countRating;
+  final bool? isTopSeller;
+  final String? notelp;
 
   Penitip({
-    required this.id_penitip,
-    required this.nama_penitip,
+    required this.idPenitip,
+    this.poin,
+    required this.namaPenitip,
     required this.email,
-    required this.notelp,
     required this.alamat,
-    required this.saldo_penitip,
-    required this.no_ktp,
+    required this.saldoPenitip,
+    required this.noKtp,
     required this.username,
-    required this.password,
-    required this.foto_ktp,
-    required this.status_aktif,
+    this.password,
+    this.fotoKtp,
+    this.statusAktif,
+    this.avgRating,
+    this.countRating,
+    this.isTopSeller,
+    this.notelp,
   });
 
   // Method untuk membuat objek Penitip dari raw JSON
@@ -32,34 +40,45 @@ class Penitip {
 
   // Method untuk membuat objek Penitip dari Map
   factory Penitip.fromJson(Map<String, dynamic> json) => Penitip(
-        id_penitip: json["id_penitip"],
-        nama_penitip: json["nama_penitip"],
-        email: json["email"],
-        notelp: json["no_telp"],
-        alamat: json["alamat"],
-        saldo_penitip: json["saldo_penitip"].toDouble(),
-        no_ktp: json["no_ktp"],   // Mengambil no_ktp dari JSON
-        username: json["username"],   // Mengambil username dari JSON
-        password: json["password"],   // Mengambil password dari JSON
-        foto_ktp: json["foto_ktp"],   // Mengambil foto_ktp dari JSON
-        status_aktif: json["status_aktif"],   // Mengambil status_aktif dari JSON
-      );
+    idPenitip: json['id_penitip'],
+    poin: json['poin'] != null ? (json['poin'] as num).toInt() : null,
+    namaPenitip: json['nama_penitip'],
+    email: json['email'],
+    alamat: json['alamat'],
+    saldoPenitip: (json['saldo_penitip'] != null) ? json['saldo_penitip'].toDouble() : null,
+    noKtp: json['no_ktp'],
+    username: json['username'],
+    password: json['password'],
+    fotoKtp: json['foto_ktp'],
+    statusAktif: json['status_aktif'],
+    avgRating: json['avgRating'] != null
+        ? double.tryParse(json['avgRating'].toString()) ?? 0.0
+        : 0.0,
+    countRating: json['countRating'] != null
+        ? int.tryParse(json['countRating'].toString()) ?? 0
+        : 0,
+
+    isTopSeller: json['is_top_seller'] ?? false,
+
+    notelp: json['no_telp'],
+  );
 
   // Mengubah objek Penitip ke format JSON
   String toRawJson() => json.encode(toJson());
 
   // Mengubah objek Penitip ke Map
   Map<String, dynamic> toJson() => {
-        "id_penitip": id_penitip,
-        "nama_penitip": nama_penitip,
+        "id_penitip": idPenitip,
+        "poin": poin,
+        "nama_penitip": namaPenitip,
         "email": email,
-        "no_telp": notelp,
         "alamat": alamat,
-        "saldo_penitip": saldo_penitip,
-        "no_ktp": no_ktp,        // Menyimpan no_ktp ke dalam Map
-        "username": username,    // Menyimpan username ke dalam Map
-        "password": password,    // Menyimpan password ke dalam Map
-        "foto_ktp": foto_ktp,    // Menyimpan foto_ktp ke dalam Map
-        "status_aktif": status_aktif,  // Menyimpan status_aktif ke dalam Map
+        "saldo_penitip": saldoPenitip,
+        "no_ktp": noKtp,       
+        "username": username,   
+        "password": password,   
+        "foto_ktp": fotoKtp,   
+        "status_aktif": statusAktif,
+        "notelp": notelp,
       };
 }
