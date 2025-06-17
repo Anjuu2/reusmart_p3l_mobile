@@ -12,11 +12,13 @@ import 'package:reusmart_mobile/View/Hunter_Dashboard.dart';
 import 'package:reusmart_mobile/View/Homepage.dart';
 import 'package:reusmart_mobile/View/BottomNav.dart';
 
+// Background handler untuk Firebase Messaging
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(); // Pastikan Firebase diinisialisasi
   print("Handling a background message: ${message.messageId}");
 }
 
+// Pengaturan notifikasi lokal
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -28,7 +30,7 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 
 void setupFlutterNotifications() {
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('bellfill');
+      AndroidInitializationSettings('bellfill');  // Ganti dengan nama icon Anda
 
   final InitializationSettings initializationSettings =
       InitializationSettings(android: initializationSettingsAndroid);
@@ -42,18 +44,21 @@ void setupFlutterNotifications() {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp();  // Inisialisasi Firebase
 
-  setupFlutterNotifications();
+  setupFlutterNotifications();  // Setup notifikasi lokal
 
+  // Meminta izin notifikasi
   await FirebaseMessaging.instance.requestPermission(
     alert: true,
     badge: true,
     sound: true,
   );
 
+  // Menangani pesan latar belakang
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+  // Menangani pesan foreground
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
@@ -78,28 +83,22 @@ void main() async {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // static final Map<String, WidgetBuilder> staticRoutes = {
-  //   '/': (context) => const LoginPage(),
-  // };
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ReUseMart',
       theme: ThemeData(
-        primarySwatch: Colors.green,       // <— ini bikin AppBar hijau
+        primarySwatch: Colors.green,
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.green,   // pastikan juga di sini
-          foregroundColor: Colors.white,   // untuk teks/icon putih
+          backgroundColor: Colors.green,   // Set warna AppBar
+          foregroundColor: Colors.white,   // Set warna teks di AppBar
         ),
       ),
-      // home: HomePage(),
-      home: MainNavPage(),
       // home: LoginPage(),
+      home: MainNavPage(),  // Halaman utama saat aplikasi berjalan
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         final args = settings.arguments as Map<String, dynamic>? ?? {};
@@ -115,7 +114,6 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (_) => PenitipProfile(
                 namaPenitip: args['nama_penitip'] ?? 'User',
-                // apiToken: args['api_token'] ?? '',
               ),
             );
           case '/kurirDashboard':

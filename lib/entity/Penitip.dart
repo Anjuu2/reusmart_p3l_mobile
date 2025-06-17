@@ -4,36 +4,35 @@ class Penitip {
   final int idPenitip;
   final int? poin;
   final String namaPenitip;
-  final String? email;
-  // final String? notelp;
-  final String? alamat;
-  final double? saldoPenitip;
-  final String? noKtp;
-  final String? username;
+  final String email;
+  final String alamat;
+  final double saldoPenitip;
+  final String noKtp;
+  final String username;
   final String? password;
   final String? fotoKtp;
   final bool? statusAktif;
   final double? avgRating;
   final int? countRating;
   final bool? isTopSeller;
-
+  final String? notelp;
 
   Penitip({
     required this.idPenitip,
     this.poin,
     required this.namaPenitip,
-    this.email,
-    // this.notelp,
-    this.alamat,
-    this.saldoPenitip,
-    this.noKtp,
-    this.username,
+    required this.email,
+    required this.alamat,
+    required this.saldoPenitip,
+    required this.noKtp,
+    required this.username,
     this.password,
     this.fotoKtp,
     this.statusAktif,
     this.avgRating,
     this.countRating,
     this.isTopSeller,
+    this.notelp,
   });
 
   // Method untuk membuat objek Penitip dari raw JSON
@@ -45,7 +44,6 @@ class Penitip {
     poin: json['poin'] != null ? (json['poin'] as num).toInt() : null,
     namaPenitip: json['nama_penitip'],
     email: json['email'],
-    // notelp: json['no_telp'],
     alamat: json['alamat'],
     saldoPenitip: (json['saldo_penitip'] != null) ? json['saldo_penitip'].toDouble() : null,
     noKtp: json['no_ktp'],
@@ -59,8 +57,10 @@ class Penitip {
     countRating: json['countRating'] != null
         ? int.tryParse(json['countRating'].toString()) ?? 0
         : 0,
+
     isTopSeller: json['is_top_seller'] ?? false,
 
+    notelp: json['no_telp'],
   );
 
   // Mengubah objek Penitip ke format JSON
@@ -72,7 +72,6 @@ class Penitip {
         "poin": poin,
         "nama_penitip": namaPenitip,
         "email": email,
-        // "no_telp": notelp,
         "alamat": alamat,
         "saldo_penitip": saldoPenitip,
         "no_ktp": noKtp,       
@@ -80,5 +79,6 @@ class Penitip {
         "password": password,   
         "foto_ktp": fotoKtp,   
         "status_aktif": statusAktif,
+        "notelp": notelp,
       };
 }

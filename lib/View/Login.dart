@@ -150,11 +150,11 @@ class _LoginPageState extends State<LoginPage> {
             );
             break;
           case 'dashboard.penitip':
-            // Navigator.pushReplacementNamed(
-            //   context,
-            //   '/penitipDashboard',
-            //   arguments: {'nama_penitip': namaUser},
-            // );
+            Navigator.pushReplacementNamed(
+              context,
+              '/penitipDashboard',
+              arguments: {'nama_penitip': namaUser},
+            );
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (_) => MainNavPage()),
