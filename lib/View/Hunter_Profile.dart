@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:reusmart_mobile/View/LiveCoding.dart';
 import 'package:reusmart_mobile/client/HunterClient.dart';
 import 'package:reusmart_mobile/client/LoginClient.dart';
 import 'package:reusmart_mobile/View/Hunter_Dashboard.dart';
@@ -176,7 +177,7 @@ class _HunterProfileState extends State<HunterProfile> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const HunterHistoryPage(),  // Ganti dengan nama halaman history yang kamu pakai
+                        builder: (_) => const HunterHistoryPage(), 
                       ),
                     );
                   },

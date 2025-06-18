@@ -96,5 +96,42 @@ class HunterClient {
     }
   }
 
+  Future<Map<String, dynamic>> getHistoryKomisiHunterLiveCode(
+    String token, {
+    int? month,
+    int? year,
+  }) async {
+    try {
+      String url = '$baseUrl//hunter-history-komisi-livecode';
+      if (month != null && year != null) {
+        url += '?month=$month&year=$year';
+      }
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(timeoutDuration);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data;
+      } else {
+        return {
+          'success': false,
+          'error': 'Gagal mengambil data history komisi.',
+          'statusCode': response.statusCode,
+          'body': response.body,
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'error': 'Request timeout. Coba lagi.'};
+    } catch (e) {
+      return {'success': false, 'error': 'Terjadi kesalahan: $e'};
+    }
+  }
+
   
 }
