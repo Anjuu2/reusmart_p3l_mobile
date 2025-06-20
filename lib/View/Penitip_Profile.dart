@@ -37,7 +37,11 @@ class _PenitipProfileState extends State<PenitipProfile> {
     debugPrint('Hasil dari API: $result');
 
     if (result['success']) {
-      return Penitip.fromJson(result['data']['penitip']);
+      return Penitip.fromJson({
+        ...result['data']['penitip'],
+        'avgRating': result['data']['avgRating'],
+        'countRating': result['data']['countRating'],
+      });
     } else {
       return null;
     }
