@@ -31,7 +31,7 @@ class _PenitipHistoryPageState extends State<PenitipHistoryPage> {
   String _selectedStatus = 'Semua';
   TextEditingController _searchController = TextEditingController();
 
-  static const hostUrl = 'http://10.0.2.2:8000';
+  static const hostUrl = 'http://reusemart.shop';
   Timer? _debounce;
 
   @override

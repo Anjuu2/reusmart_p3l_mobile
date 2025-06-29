@@ -26,8 +26,8 @@ class _PembeliDashboardState extends State<PembeliDashboard> {
   List<BarangTitipan> _dashboardProducts = [];
   bool _isLoading = true;
   int? _selectedCategoryId;
-  static const apiUrl  = 'http://10.0.2.2:8000/api';
-  static const hostUrl = 'http://10.0.2.2:8000';
+  static const apiUrl  = 'http://reusemart.shop/api';
+  static const hostUrl = 'http://reusemart.shop';
 
   final List<Widget> _pages = [
     PembeliDashboard(namaPembeli: 'default'),

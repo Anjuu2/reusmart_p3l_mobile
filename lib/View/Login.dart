@@ -33,11 +33,11 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> saveFcmTokenToServer(String fcmToken, String apiToken, String userType) async {
     String url = '';
     if (userType == 'pembeli') {
-      url = 'http://10.0.2.2:8000/api/save-fcm-token-pembeli';
+      url = 'http://reusemart.shop/api/save-fcm-token-pembeli';
     } else if (userType == 'penitip') {
-      url = 'http://10.0.2.2:8000/api/save-fcm-token-penitip';
+      url = 'http://reusemart.shop/api/save-fcm-token-penitip';
     } else if (userType == 'kurir') {
-      url = 'http://10.0.2.2:8000/api/save-fcm-token-pegawai';
+      url = 'http://reusemart.shop/api/save-fcm-token-pegawai';
     } else {
       print('User type tidak dikenali');
       return;

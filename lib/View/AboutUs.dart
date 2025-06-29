@@ -33,7 +33,7 @@ class AboutUsSection extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: Image.network(
-              'http://10.0.2.2:8000/images/barang/reusemart.jpg',
+              'http://reusemart.shop/images/barang/reusemart.jpg',
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,

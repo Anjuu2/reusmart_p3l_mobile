@@ -12,8 +12,8 @@ class DetailProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // URL gambar pertama dan kedua dari produk
-    final imageUrl1 = 'http://10.0.2.2:8000/images/barang/${product['foto_barang'][0]['nama_file'] ?? 'default.jpg'}';
-    final imageUrl2 = 'http://10.0.2.2:8000/images/barang/${product['foto_barang'][1]['nama_file'] ?? 'default.jpg'}';
+    final imageUrl1 = 'http://reusemart.shop/images/barang/${product['foto_barang'][0]['nama_file'] ?? 'default.jpg'}';
+    final imageUrl2 = 'http://reusemart.shop/images/barang/${product['foto_barang'][1]['nama_file'] ?? 'default.jpg'}';
 
     // List of images
     List<String> imageUrls = [imageUrl1, imageUrl2];

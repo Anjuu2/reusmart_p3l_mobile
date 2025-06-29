@@ -12,7 +12,7 @@ class TopSellerPage extends StatefulWidget {
 }
 
 class _TopSellerPageState extends State<TopSellerPage> {
-  static const apiUrl = 'http://10.0.2.2:8000/api';
+  static const apiUrl = 'http://reusemart.shop/api';
   TopSeller? _topSeller;
   Penitip? _penitip;
   bool _loading = true;
@@ -25,7 +25,7 @@ class _TopSellerPageState extends State<TopSellerPage> {
 
   Future<void> _loadData() async {
     try {
-      final res = await http.get(Uri.parse('http://10.0.2.2:8000/api/top-seller'));
+      final res = await http.get(Uri.parse('http://reusemart.shop/api/top-seller'));
       if (res.statusCode == 200) {
         final data = json.decode(res.body)['data'];
         print('Raw data: ${res.body}');

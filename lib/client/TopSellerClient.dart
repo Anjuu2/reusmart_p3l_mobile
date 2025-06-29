@@ -4,7 +4,7 @@ import 'package:reusmart_mobile/entity/TopSeller.dart';
 import 'package:reusmart_mobile/entity/Penitip.dart';   
 
 class TopSellerClient {
-  static const String baseUrl = 'http://10.0.2.2:8000/api';
+  static const String baseUrl = 'http://reusemart.shop/api';
 
   final String token;
   TopSellerClient({required this.token});
