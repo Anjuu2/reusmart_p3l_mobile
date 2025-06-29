@@ -97,6 +97,7 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.white,   // Set warna teks di AppBar
         ),
       ),
+      // home: LoginPage(),
       home: MainNavPage(),  // Halaman utama saat aplikasi berjalan
       // home: LoginPage(),  // Halaman utama saat aplikasi berjalan
       debugShowCheckedModeBanner: false,
