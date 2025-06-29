@@ -23,7 +23,8 @@ class _AllProductsPageState extends State<AllProductsPage> {
   int _currentPage = 1; // Track the current page for pagination
   bool _hasMoreProducts = true; // Flag to check if there are more products
 
-  static const apiUrl = 'http://10.0.2.2:8000/api';  // Make sure API is reachable
+  static const apiUrl = 'http://reusemart.shop/api';  // Make sure API is reachable
+  static const hostUrl = 'http://reusemart.shop';
 
   @override
   void initState() {
@@ -239,7 +240,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
                       ),
                       itemBuilder: (context, index) {
                         final product = _allProducts[index];
-                        final imageUrl = 'http://10.0.2.2:8000/images/barang/${product['foto_barang'][0]['nama_file'] ?? 'default.jpg'}';
+                        final imageUrl = '$hostUrl/images/barang/${product['foto_barang'][0]['nama_file'] ?? 'default.jpg'}';
 
                         return GestureDetector(
                                 onTap: () {

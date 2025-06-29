@@ -35,15 +35,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initData() async {
-    await _loadCategories();
-    await _loadProducts();
+  try {
+    await Future.wait([
+      _loadCategories(),
+      _loadProducts()
+    ]);
 
     final randomList = List.of(_products)..shuffle();
     final dashList = randomList.take(6).toList();
+
     final banners = dashList.take(3).map((p) {
-      final fn = p.fotoBarang.isNotEmpty
-        ? p.fotoBarang.first.namaFile
-        : 'default.jpg';
+      final fn = p.fotoBarang.isNotEmpty ? p.fotoBarang.first.namaFile : 'default.jpg';
       return '$hostUrl/images/barang/$fn';
     }).toList();
 
@@ -52,7 +54,14 @@ class _HomePageState extends State<HomePage> {
       _banners = banners;
       _isLoading = false;
     });
+  } catch (e) {
+    debugPrint("Gagal init data: $e");
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
+
 
   Future<void> _loadCategories() async {
     final res = await http.get(

@@ -13,12 +13,19 @@ class FotoBarang {
     required this.urutan,
   });
 
+  /// Helper untuk konversi dinamis ke int
+  static int tryParseInt(dynamic value) {
+    if (value is int) return value;
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
+  }
+
   factory FotoBarang.fromJson(Map<String, dynamic> json) {
     return FotoBarang(
-      idFoto: json['id_foto'] as int,
-      idBarang: json['id_barang'] as int,
-      namaFile: json['nama_file'] as String,
-      urutan: json['urutan'] as int,
+      idFoto: tryParseInt(json['id_foto']),
+      idBarang: tryParseInt(json['id_barang']),
+      namaFile: json['nama_file'] ?? '',
+      urutan: tryParseInt(json['urutan']),
     );
   }
 
