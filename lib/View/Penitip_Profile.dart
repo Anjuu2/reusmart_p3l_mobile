@@ -37,7 +37,11 @@ class _PenitipProfileState extends State<PenitipProfile> {
     debugPrint('Hasil dari API: $result');
 
     if (result['success']) {
-      return Penitip.fromJson(result['data']['penitip']);
+      return Penitip.fromJson({
+        ...result['data']['penitip'],
+        'avgRating': result['data']['avgRating'],
+        'countRating': result['data']['countRating'],
+      });
     } else {
       return null;
     }
@@ -66,6 +70,34 @@ class _PenitipProfileState extends State<PenitipProfile> {
         SnackBar(content: Text(result['message'] ?? 'Logout gagal.')),
       );
     }
+  }
+
+  Widget _buildRatingField(double? rating, int? count) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ListTile(
+        leading: const Icon(Icons.star, color: Colors.orange),
+        title: const Text(
+          'Rating',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          rating != null ? '${rating.toStringAsFixed(1)} / 5' : 'Belum ada rating',
+          style: const TextStyle(fontSize: 16),
+        ),
+      ),
+    );
   }
 
   Widget _buildProfileField(IconData icon, String label, String value) {
@@ -135,13 +167,34 @@ class _PenitipProfileState extends State<PenitipProfile> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      Text(
-                        penitip.namaPenitip,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Column(
+                        children: [
+                          Text(
+                            penitip.namaPenitip,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (penitip.isTopSeller == true)
+                            Container(
+                              margin: const EdgeInsets.only(top: 6),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.amber[700],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Text(
+                                "🎖️ Top Seller Bulan Ini",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),
@@ -154,7 +207,7 @@ class _PenitipProfileState extends State<PenitipProfile> {
                 _buildProfileField(Icons.person, 'Username', penitip.username),
                 _buildProfileField(Icons.home, 'Alamat', penitip.alamat),
                 _buildProfileField(Icons.monetization_on, 'Poin Anda', penitip.poin.toString()),
-                _buildProfileField(Icons.account_balance_wallet, 'Saldo', penitip.saldoPenitip?.toString()),
+                _buildProfileField(Icons.account_balance_wallet, 'Saldo', penitip.saldoPenitip.toString()),
                 _buildRatingField(penitip.avgRating, penitip.countRating),
                 _buildProfileField(Icons.verified_user, 'Status', penitip.statusAktif == true ? 'Aktif' : 'Nonaktif'),
               const SizedBox(height: 24),

@@ -98,6 +98,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: MainNavPage(),  // Halaman utama saat aplikasi berjalan
+      // home: LoginPage(),  // Halaman utama saat aplikasi berjalan
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         final args = settings.arguments as Map<String, dynamic>? ?? {};
