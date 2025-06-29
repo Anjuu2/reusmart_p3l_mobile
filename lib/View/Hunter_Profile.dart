@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:reusmart_mobile/View/LiveCoding.dart';
 import 'package:reusmart_mobile/client/HunterClient.dart';
 import 'package:reusmart_mobile/client/LoginClient.dart';
 import 'package:reusmart_mobile/View/Hunter_Dashboard.dart';
@@ -149,7 +150,7 @@ class _HunterProfileState extends State<HunterProfile> {
                     children: [
                       CircleAvatar(
                         radius: 50,
-                        backgroundImage: const AssetImage('assets/images/profile_placeholder.png'),
+                       backgroundImage: const NetworkImage('https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'),
                       ),
                       const SizedBox(height: 12),
                       Text(
@@ -176,7 +177,7 @@ class _HunterProfileState extends State<HunterProfile> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const HunterHistoryPage(),  // Ganti dengan nama halaman history yang kamu pakai
+                        builder: (_) => const HunterHistoryPage(), 
                       ),
                     );
                   },
