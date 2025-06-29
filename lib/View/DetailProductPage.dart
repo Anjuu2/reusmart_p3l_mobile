@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-// import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class DetailProductPage extends StatelessWidget {
@@ -70,17 +70,17 @@ class DetailProductPage extends StatelessWidget {
                     left: 0,
                     right: 0,
                     child: Center(
-                      // child: SmoothPageIndicator(
-                      //   controller: _pageController,
-                      //   count: imageUrls.length,
-                      //   effect: WormEffect(
-                      //     dotWidth: 8,
-                      //     dotHeight: 8,
-                      //     spacing: 4,
-                      //     dotColor: Colors.white.withOpacity(0.5),
-                      //     activeDotColor: Colors.white,
-                      //   ),
-                      // ),
+                      child: SmoothPageIndicator(
+                        controller: _pageController,
+                        count: imageUrls.length,
+                        effect: WormEffect(
+                          dotWidth: 8,
+                          dotHeight: 8,
+                          spacing: 4,
+                          dotColor: Colors.white.withOpacity(0.5),
+                          activeDotColor: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ],
